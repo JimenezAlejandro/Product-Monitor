@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Product Tracker</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <%- include('header'); %>
+        <div class="container h-100">
+            <div class="row h-25">
+                <div class="m-auto">
+                    <% if (message && message != '') { %>
+                        <%- include('message'); %>
+                    <% } %>
+                    <% if (error && error != '') { %>
+                        <%- include('error'); %>
+                    <% } %>
+                </div>
+            </div>
+            <div class="card-group">
+                <div class="row h-75">
+                    <% if (trackers) { %>
+                        <% trackers.forEach(tracker => { %>
+                            <div class="card mb-2 pb-auto mx-2" style="width: 16rem;">
+                                <div class="card-header" style<%= !tracker.active ? '=background-color:rgba(170,255,190,0.3);' : ''; %>>
+                                    <%= tracker.name; %>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <% tracker.sizes.forEach(size => { %>
+                                            <li class="list-group-item">
+                                                <%= size %>
+                                            </li>
+                                        <% }); %>
+                                    </ul>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="<%= tracker.url; %>" class="btn btn-outline-secondary">Visit</a>
+                                    <button class="btn btn-outline-secondary ml-1" onclick="editTracker('<%= tracker._id; %>')">Edit</button>
+                                    <button class="btn btn-outline-danger ml-1" onclick="removeTracker('<%= tracker._id; %>')">Remove</button>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <script>
+            function editTracker(trackerId) {
+                window.location.href = "/api/tracker/edit?id=" + trackerId;
+            }
+            function removeTracker(trackerId) {
+                window.location.href = "/api/tracker/remove?id=" + trackerId;
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    </body>
+</html>

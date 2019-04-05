@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Product Tracker</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <%- include('header'); %>
+        <div class="container h-100">
+            <div class="row h-25">
+                <div class="input-group w-25 m-auto">
+                    <input id="search-term" type="text" name="searchTerm" class="form-control" placeholder="Product ID" aria-describedby="button-addon2" required autofocus>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="showProduct()">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="container h-50">
+                <div class="row h-100">
+                    <div class="w-75 mt-0 mx-auto mb-auto">
+                        <div class="media">
+                            <img id="product-image" src="" class="w-50 mr-3 img-fluid" alt="">
+                            <div id="media-body" class="media-body">
+                                <h5 id="product-title" class="mt-0"></h5>
+                                <div id="media-buttons" class="btn-group-toggle" style="width: 4rem;" data-toggle="buttons"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            let term = '';
+
+            function removeProduct() {
+                document.getElementById("product-image").src = '';
+                document.getElementById("product-title").innerText = '';
+                var mediaButtons = document.getElementById('media-buttons');
+                while (mediaButtons.lastChild) {
+                    mediaButtons.removeChild(mediaButtons.lastChild);
+                }
+
+                var mediaBody = document.getElementById('media-body');
+                mediaBody.removeChild(mediaBody.lastChild);
+            }
+
+            function createTracker() {
+                let sizes = '';
+                let selectedItems = document.getElementsByClassName('active');
+                for (let selected of selectedItems) {
+                    if (selected.tagName == 'LABEL') {
+                        sizes += '&sizes[]=' + selected.innerText;
+                    }
+                }
+
+                window.location.href = '/api/cron?searchTerm=' + term + sizes;
+            }
+
+            function showProduct() {
+                removeProduct();
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        const data = JSON.parse(this.responseText).data;
+                        document.getElementById("product-image").src = data.imageUrl;
+                        document.getElementById("product-title").innerText = data.name;
+                        let mediaButtons = document.getElementById('media-buttons');
+
+                        data.sizes.forEach(size => {
+                            let label = document.createElement('label');
+                            let checkbox = document.createElement('input');
+                            let text = document.createTextNode(size.value);
+
+                            label.className = 'mt-3 btn btn-block btn-outline-secondary';
+                            checkbox.type = 'checkbox';
+                            checkbox.autocomplete = 'off';
+                            checkbox.value = size.value;
+
+                            label.appendChild(checkbox);
+                            label.appendChild(text);
+                            mediaButtons.appendChild(label);
+                        });
+
+                        let mediaBody = document.getElementById('media-body');
+                        let createTrackerBtn = document.createElement('button');
+
+                        createTrackerBtn.id = 'create-tracker';
+                        createTrackerBtn.className = 'btn btn-dark mt-4';
+                        createTrackerBtn.type = 'button';
+                        createTrackerBtn.innerText = 'Create Tracker';
+                        createTrackerBtn.onclick = createTracker;
+
+                        mediaBody.appendChild(createTrackerBtn);
+                    }
+                };
+                term = document.getElementById("search-term").value;
+                xmlhttp.open("GET", "/api/zara?searchTerm=" + term, true);
+                xmlhttp.send();
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    </body>
+</html>

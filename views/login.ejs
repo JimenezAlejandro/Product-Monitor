@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Product Tracker</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body class="text-center">
+        <div class="container h-100">
+            <div class="row h-25">
+                <div class="m-auto">
+                    <% if (error && error != '') { %>
+                        <%- include('error'); %>
+                    <% } %>
+                </div>
+            </div>
+            <div class="row h-75">
+                <div class="w-25 mx-auto mt-5">
+                    <form method="POST">
+                        <label for="username" class="sr-only">Email</label>
+                        <input type="email" name="username" id="username" class="form-control" placeholder="Email" required autofocus>
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+                        <button class="btn btn-lg btn-outline-secondary btn-block mt-3" type="submit">Login</button>
+                        <p class="mt-5 mb-3 text-muted"><a href="/signup">Sign Up</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    </body>
+</html>
